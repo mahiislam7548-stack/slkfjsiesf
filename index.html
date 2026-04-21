@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Verification Required | Secure Access</title>
+    <!-- Modern Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS VARIABLES --- */
+        :root {
+            --primary-color: #ff0055; /* Hot Pink */
+            --secondary-color: #00e5ff; /* Cyan */
+            --bg-dark: #09090b;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- DYNAMIC RGB BACKGROUND --- */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 1;
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .orb-1 { width: 300px; height: 300px; background: var(--primary-color); top: -50px; left: -50px; }
+        .orb-2 { width: 250px; height: 250px; background: var(--secondary-color); bottom: -50px; right: -50px; animation-delay: -5s; }
+        .orb-3 { width: 150px; height: 150px; background: #7000ff; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.3; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 20px) scale(1.1); }
+        }
+
+        /* --- MAIN CARD --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 420px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* RGB Border Glow Line */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        /* --- HEADER --- */
+        .logo-area {
+            margin-bottom: 25px;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--secondary-color);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+        .pulse-dot {
+            width: 8px; height: 8px; background: var(--secondary-color); border-radius: 50%;
+            box-shadow: 0 0 8px var(--secondary-color);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        h1 span {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #b0003a);
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 0, 85, 0.4);
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.6);
+            background: linear-gradient(135deg, #ff1a6b, #d40045);
+        }
+
+        /* --- STEPS & ANIMATIONS --- */
+        .step { display: none; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .step.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- FAKE LOADING SCREEN --- */
+        .loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 250px;
+        }
+        .spinner {
+            width: 50px; height: 50px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        .loading-text { font-size: 1.1rem; color: white; font-weight: 600; }
+        .loading-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: 25px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="container">
+        <div class="card">
+            
+            <div class="logo-area">
+                <div class="status-badge">
+                    <div class="pulse-dot"></div>
+                    SYSTEM LIVE
+                </div>
+            </div>
+
+            <!-- STEP 1: Age Gate -->
+            <div class="step active" id="step1">
+                <h1>ADULT CONTENT <br><span>WARNING</span></h1>
+                <p>You are about to see explicit photos of women in your area. This website contains material restricted to adults only.</p>
+                <div class="btn-grid">
+                    <button class="btn btn-primary" onclick="nextStep(2)">I am 18 or older</button>
+                    <button class="btn" onclick="alert('Exit now.')">I am under 18</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Preference -->
+            <div class="step" id="step2">
+                <h1>QUICK <br><span>SETUP</span></h1>
+                <p>To match you correctly, tell us what you are looking for right now:</p>
+                <div class="btn-grid">
+                    <button class="btn" onclick="nextStep(3)">Casual Dating</button>
+                    <button class="btn" onclick="nextStep(3)">Secret Affair</button>
+                    <button class="btn" onclick="nextStep(3)">Chat & Photos</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Body Type -->
+            <div class="step" id="step3">
+                <h1>SELECT <br><span>PREFERENCE</span></h1>
+                <p>What kind of body type attracts you the most?</p>
+                <div class="btn-grid">
+                    <button class="btn" onclick="runLoader()">Skinny / Petite</button>
+                    <button class="btn" onclick="runLoader()">Curvy / BBW</button>
+                    <button class="btn" onclick="runLoader()">I like everything</button>
+                </div>
+            </div>
+
+            <!-- STEP 4: Analyzing (Fake Loader) -->
+            <div class="step" id="stepLoading">
+                <div class="loader-content">
+                    <div class="spinner"></div>
+                    <div class="loading-text" id="loadText">Analyzing Answers...</div>
+                    <div class="loading-sub">Checking local database</div>
+                </div>
+            </div>
+
+            <!-- STEP 5: Final CTA -->
+            <div class="step" id="stepFinal">
+                <div class="status-badge" style="color: #00ff88; border-color: #00ff88;">
+                    <span style="background:#00ff88;" class="pulse-dot"></span> MATCH FOUND
+                </div>
+                <h1>ACCESS <br><span>GRANTED</span></h1>
+                <p>We found <strong style="color:white">14 women</strong> near you online now. Registration is free for the next <span style="color:var(--primary-color)">2 minutes</span>.</p>
+                
+                <div class="btn-grid">
+                    <!-- AFFILIATE LINK ADDED BELOW -->
+                    <a href="https://dj83t.bemobtrcks.com/go/81d45cf6-5ba2-407a-b8a8-7e4ad39c23f1?ad_id=%7B%7Bad.id%7D%7D&adset_id=%7B%7Badset.id%7D%7D&campaign_id=%7B%7Bcampaign.id%7D%7D&ad_name=%7B%7Bad.name%7D%7D&adset_name=%7B%7Badset.name%7D%7D&campaign_name=%7B%7Bcampaign.name%7D%7D" class="btn btn-primary" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">
+                        CONTINUE TO PHOTOS
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>&copy; 2024 Secure Dating. 256-bit Encryption.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function nextStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+            // Show target step
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        function runLoader() {
+            nextStep('Loading');
+            
+            const textElement = document.getElementById('loadText');
+            
+            // Simulation of checking database
+            setTimeout(() => { textElement.innerText = "Verifying Location..."; }, 800);
+            setTimeout(() => { textElement.innerText = "Checking Eligibility..."; }, 1600);
+            setTimeout(() => { textElement.innerText = "Matches Found!"; }, 2400);
+            
+            // Go to final step after 2.8 seconds
+            setTimeout(() => {
+                nextStep('Final');
+            }, 2800);
+        }
+    </script>
+</body>
+</html>
